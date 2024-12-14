@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #282c34;
+        }
+
+        .calculator {
+            border-radius: 15px;
+            width: 260px;
+            padding: 20px;
+            background-color: #333;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #display {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.6em;
+            text-align: right;
+            border: 2px solid #555;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button.clear {
+            background-color: #dc3545;
+        }
+
+        button.clear:hover {
+            background-color: #a71d2a;
+        }
+
+        button.equal {
+            background-color: #28a745;
+            grid-column: span 4;
+        }
+
+        button.equal:hover {
+            background-color: #1e7e34;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" aria-label="Calculator display" onkeypress="handleKeyPress(event)">
+        <div class="buttons">
+            <!-- Number Buttons -->
+            <button class="button" onclick="appendToDisplay('7')">7</button>
+            <button class="button" onclick="appendToDisplay('8')">8</button>
+            <button class="button" onclick="appendToDisplay('9')">9</button>
+            <button class="button" onclick="appendToDisplay('/')">&divide;</button>
+
+            <button class="button" onclick="appendToDisplay('4')">4</button>
+            <button class="button" onclick="appendToDisplay('5')">5</button>
+            <button class="button" onclick="appendToDisplay('6')">6</button>
+            <button class="button" onclick="appendToDisplay('*')">&times;</button>
+
+            <button class="button" onclick="appendToDisplay('1')">1</button>
+            <button class="button" onclick="appendToDisplay('2')">2</button>
+            <button class="button" onclick="appendToDisplay('3')">3</button>
+            <button class="button" onclick="appendToDisplay('-')">&minus;</button>
+
+            <button class="button" onclick="appendToDisplay('0')">0</button>
+            <button class="button clear" onclick="clearDisplay()">C</button>
+            <button class="button" onclick="appendToDisplay('+')">&plus;</button>
+            <button class="button equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        // Append value to the display
+        function appendToDisplay(value) {
+            if (display.value === 'Error') display.value = '';
+            display.value += value;
+        }
+
+        // Clear the display
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        // Perform the calculation
+        function calculate() {
+            try {
+                const result = Function(`'use strict'; return (${display.value})`)();
+                display.value = result;
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+
+        // Handle keypress for direct input
+        function handleKeyPress(event) {
+            const allowedKeys = /[0-9+\-*/.]/;
+            if (event.key === 'Enter') {
+                calculate();
+            } else if (!allowedKeys.test(event.key)) {
+                event.preventDefault();
+            }
+        }
+    </script>
+</body>
+</html>
